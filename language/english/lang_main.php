@@ -1,0 +1,56 @@
+<?php
+/*	Project:	EQdkp-Plus
+ *	Package:	MediaCenter Plugin
+ *	Link:		http://eqdkp-plus.eu
+ *
+ *	Copyright (C) 2006-2015 EQdkp-Plus Developer Team
+ *
+ *	This program is free software: you can redistribute it and/or modify
+ *	it under the terms of the GNU Affero General Public License as published
+ *	by the Free Software Foundation, either version 3 of the License, or
+ *	(at your option) any later version.
+ *
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU Affero General Public License for more details.
+ *
+ *	You should have received a copy of the GNU Affero General Public License
+ *	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+if (!defined('EQDKP_INC'))
+{
+    header('HTTP/1.0 404 Not Found');exit;
+}
+
+$lang = array(
+	'localitembase'                    => 'Local Itemdatabase',
+	
+	// Description
+	'localitembase_short_desc'         => 'Local Itemdatabase',
+	'localitembase_long_desc'          => 'Create and manage your own items',
+		
+	'lit_plugin_not_installed'		=> 'The LocalItembase-Plugin is not installed.',
+	'lit_config_saved'				=> 'The configuration has been successfully saved',
+		
+	'lit_fs_items' => 'Items',
+	'lit_f_base_layout' => 'HTML-Baselayout of the Itemtooltip',
+	'lit_f_base_css' => 'CSS for Styling of the Itemtooltip',
+	'lit_f_infotext' => 'Informationtext for User',
+
+	'lit_add_item' => 'Add new Item',
+	'lit_delete_selected_items' => 'Delete selected items',
+	'lit_delete_confirm' => 'Are you sure you want to delete the following items: %s',
+	'lit_fs_general' => 'General',
+	'lit_f_item_gameid' => 'Game-ID',
+	'lit_f_quality' => 'Item-Quality',
+	'lit_f_item_text' => 'Item-Description',
+	'lit_f_item_text_help' => 'You insert the uploaded item-image into your text using the {IMAGE} placeholder',
+	'lit_f_item_name' => 'Itemname',
+	'lit_f_item_images' => 'Item-Image',
+	'lit_f_icon' => 'Item-Icon',
+
+ );
+
+?>
