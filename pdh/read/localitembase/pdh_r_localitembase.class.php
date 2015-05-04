@@ -69,7 +69,7 @@ if ( !class_exists( "pdh_r_localitembase" ) ) {
 				return true;
 			}		
 
-			$objQuery = $this->db->query('SELECT * FROM eqdkp21_plugin_localitembase');
+			$objQuery = $this->db->query('SELECT * FROM __plugin_localitembase');
 			if($objQuery){
 				while($drow = $objQuery->fetchAssoc()){
 					$this->localitembase[(int)$drow['id']] = array(
@@ -93,10 +93,7 @@ if ( !class_exists( "pdh_r_localitembase" ) ) {
 					foreach($arrNames as $key => $val){
 						$this->items_by_name[unsanitize($val)] = (int)$drow['id'];
 					}
-					
-					
-					
-					
+
 					$this->pfh->putContent($this->pfh->FolderPath('cache', 'localitembase').'item_'. (int)$drow['id'].'.json', json_encode($this->localitembase[(int)$drow['id']]));
 				}
 				
