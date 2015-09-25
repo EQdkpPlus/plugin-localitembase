@@ -46,7 +46,7 @@ class localitembase extends plugin_generic
   public $copyright  = 'GodMod';
   public $vstatus    = 'Alpha';
   
-  protected static $apiLevel = 20;
+  protected static $apiLevel = 23;
 
   /**
     * Constructor
