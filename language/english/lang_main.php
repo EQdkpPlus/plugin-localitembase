@@ -42,15 +42,20 @@ $lang = array(
 	'lit_add_item' => 'Add new Item',
 	'lit_delete_selected_items' => 'Delete selected items',
 	'lit_delete_confirm' => 'Are you sure you want to delete the following items: %s',
+	
 	'lit_fs_general' => 'General',
-	'lit_f_item_gameid' => 'Game-ID',
+	'lit_f_item_gameid' => 'Ingame-ID',
+	'lit_f_help_item_gameid' => 'Insert here the Ingame-ID of this Item. The Ingame-ID identifies the Item.',
 	'lit_f_quality' => 'Item-Quality',
+	'lit_f_help_quality' => 'Quality of the Item. Will be used for the color of the Itemname.',
 	'lit_f_item_text' => 'Item-Description',
-	'lit_f_item_text_help' => 'You insert the uploaded item-image into your text using the {IMAGE} placeholder',
+	'lit_f_item_text_help' => 'You can insert the uploaded item-image into your text using the {IMAGE} placeholder. This field accepts HTML.',
 	'lit_f_item_name' => 'Itemname',
+	'lit_f_item_name_help' => 'Name of the Item, in current language',
 	'lit_f_item_images' => 'Item-Image',
+	'lit_f_item_images_help' => 'Image, like a Screenshot, of the Item. Can be used instead, or with the Item-Description.',
 	'lit_f_icon' => 'Item-Icon',
-
+	'lit_f_help_icon' => 'Icon of the Item, normally 16px or 32px width',
  );
 
 ?>

@@ -45,14 +45,20 @@ $lang = array(
 	'lit_add_item' => 'Neues Item anlegen',
 	'lit_delete_selected_items' => 'Ausgewählte Items löschen',
 	'lit_delete_confirm' => 'Möchtest du die ausgewählten Items %s wirklich löschen?',
+	
 	'lit_fs_general' => 'Allgemeines',
-	'lit_f_item_gameid' => 'Game-ID',
-	'lit_f_quality' => 'Item-Quality',
+	'lit_f_item_gameid' => 'Ingame-ID',
+	'lit_f_help_item_gameid' => 'Trage hier die Ingame-ID des Items ein. Über diese Ingame-ID wird das Item identifiziert.',
+	'lit_f_quality' => 'Item-Qualität',
+	'lit_f_help_quality' => 'Qualität des Items. Wird verwendet für die Farbe des Item-Namens.',
 	'lit_f_item_text' => 'Item-Beschreibung',
-	'lit_f_item_text_help' => 'Du kannst ein hochgeladenes Itembild über {IMAGE} einbinden',
+	'lit_f_item_text_help' => 'Du kannst ein hochgeladenes Itembild über {IMAGE} einbinden. Dieses Feld akzeptiert HTML.',
 	'lit_f_item_name' => 'Itemname',
+	'lit_f_item_name_help' => 'Name des Items, in der jeweiligen Sprache',
 	'lit_f_item_images' => 'Itembild',
+	'lit_f_item_images_help' => 'Itembild, z.B. ein Screenshot direkt aus dem Bild. Kann statt oder mit der Item-Beschreibung verwendet werden.',
 	'lit_f_icon' => 'Item-Icon',
+	'lit_f_help_icon' => 'Icon des Items. Normalerweise zwischen 16px und 32px breit.',
  );
 
 ?>

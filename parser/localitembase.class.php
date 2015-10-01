@@ -64,6 +64,43 @@ if(!class_exists('localitembase')) {
 			$this->pdl->log('infotooltip', $debug_out);
 			return array($item_id, 'items');
 		}
+		
+		private function getItemFromDatabase($intLitItemID){
+			$objQuery = $this->db->prepare("SELECT * FROM __plugin_localitembase WHERE id=?")->execute($intLitItemID);
+			if($objQuery){
+				$arrItemData = $objQuery->fetchAssoc();
+				if(count($arrItemData)){
+					return $arrItemData;
+				}
+			}
+				
+			return false;
+		}
+		
+		private function getItemFromIngameID($strIngameID){
+			$objQuery = $this->db->prepare("SELECT * FROM __plugin_localitembase WHERE item_gameid=?")->execute($strIngameID);
+			if($objQuery){
+				$arrItemData = $objQuery->fetchAssoc();
+				if(count($arrItemData)){
+					return $arrItemData;
+				}
+			}
+			
+			return false;
+		}
+		
+		private function getPluginConfig(){
+			$objQuery = $this->db->prepare("SELECT * FROM __config WHERE config_plugin='localitembase'")->execute();
+			if($objQuery){
+				while($row = $objQuery->fetchAssoc()){
+					$arrConfigData[$row['config_name']] = $row['config_value'];
+				}
+
+				return $arrConfigData;
+			}
+			
+			return false;
+		}
 
 		protected function getItemData($item_id, $lang, $itemname='', $type='items'){
 			$orig_id = $item_id;
@@ -75,26 +112,72 @@ if(!class_exists('localitembase')) {
 			
 			if(strpos($item_id, 'lit:') === 0){
 				$intLitItemID = (int)substr($item_id, 4);
+				$arrItemData = $this->getItemFromDatabase($intLitItemID);
 			} else {
-				$intLitItemID = $this->pdh->get('localitembase', 'item_by_gameid', array($item_id));
+				$arrItemData = $this->getItemFromIngameID($item_id);
+				$intLitItemID = $arrItemData['id'];
 			}
 			
-			if($this->pdh->get('localitembase', 'id', array($intLitItemID))){
+			if($intLitItemID !== false && count($arrItemData)){
+				$myLang = isset($this->av_langs[$lang]) ? $this->av_langs[$lang] : false;
 				
-				$item['name'] = $this->pdh->get('localitembase', 'itemname_for_lang', array($intLitItemID, $lang));
-				if($item['name'] && $item['name'] != ""){
-					$item['html'] = $this->pdh->get('localitembase', 'itemhtml_for_lang', array($intLitItemID, $lang));
-					$item['lang'] = $lang;
-						
-					$item['icon'] = $this->pdh->get('localitembase', 'icon_for_item', array($intLitItemID));
-					$item['color'] = $this->pdh->get('localitembase', 'quality', array($intLitItemID));
-						
-					//Reset Item ID, because the full name is the one we should store in DB
-					$item['id'] = $orig_id;
-					
-					$item['baditem'] = true;
-					return $item;
+				$myLang = ($myLang == 'en_US') ? "en_EN" : $myLang;
+				
+				$arrNames = unserialize($arrItemData['item_name']);
+				if(isset($arrNames[$myLang]) && strlen($arrNames[$myLang])){
+					$item['name'] = $arrNames[$myLang];
+				} else {
+					foreach($arrNames as $key => $val){
+						if($val != "") {
+							$item['name'] = $val; break;
+						}
+					}
 				}
+				$item['lang'] = $lang;	
+				$item['color'] = $arrItemData['quality'];
+				
+				//Icon
+				$item['icon'] = ($arrItemData['icon'] != "") ? $this->pfh->FileLink('icons/'.$arrItemData['icon'], 'localitembase', 'absolute') : '';
+				
+				//HTML
+				$arrConfig = $this->getPluginConfig();
+				$strBaseLayout = $arrConfig['base_layout'];
+				
+				//Wenn Kein Inhalt, aber Bild, nehme Bild. Wenn Inhalt, replace Image
+				$arrText = unserialize($arrItemData['text']);
+				if(isset($arrText[$myLang]) && strlen($arrText[$myLang])){
+					$itemText = $arrText[$myLang];
+				} else {
+					foreach($arrNames as $key => $val){
+						if($val != "") {
+							$itemText = $val; break;
+						}
+					}
+				}
+				$itemImage = false;
+				$arrImage = unserialize($arrItemData['image']);
+
+				if(isset($arrImage[$myLang]) && strlen($arrImage[$myLang])){
+					$itemImage = $arrImage[$myLang];
+				}
+
+				if($itemImage && strlen($itemText)){
+					$itemImage = $this->pfh->FileLink('images/'.$itemImage, 'localitembase', 'absolute');
+					$itemText = str_replace('{IMAGE}', '<img src="'.$itemImage.'" />', $itemText);
+				}elseif($itemImage){
+					$itemText = '<img src="'.$itemImage.'" />';
+				} else {
+					$itemText = str_replace('{IMAGE}', '', $itemText);
+				}
+				
+				$itemText = str_replace("{ITEM_CONTENT}", $itemText, $strBaseLayout);
+				
+				//Icon
+				$itemText = str_replace("{ICON}", $item['icon'], $itemText);
+				
+				$item['html'] = $itemText;
+
+				return $item;
 			}
 
 			$item['baditem'] = true;
