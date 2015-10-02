@@ -54,15 +54,35 @@ if(!class_exists('localitembase')) {
 			$name = trim($itemname);
 			if (empty($name)) { return null; }
 			
-			$intLitItemID = $this->pdh->get('localitembase', 'item_by_name', array(unsanitize($name)));
-			if($intLitItemID){
-				$item_id = $this->pdh->get('localitembase', 'item_gameid', array($intLitItemID));
-				if(!$item_id) $item_id = 'lit:'.$intLitItemID;
+			$arrItemData = $this->getItemByName($this->unsanitize($name));
+			if($arrItemData){
+				$gameid = $arrItemData['item_gameid'];
+				$item_id = ($gameid != "") ? $gameid : 'lit:'.$arrItemData['id'];
+				
+				$debug_out = 'Item-ID found: '.$item_id;
+			} else {
+				$item_id = false;
+				$debug_out = 'No Item-ID found';
 			}
-
-			$debug_out = ($item_id > 0) ? 'Item-ID found: '.$item_id : 'No Item-ID found';
+			
 			$this->pdl->log('infotooltip', $debug_out);
 			return array($item_id, 'items');
+		}
+		
+		private function getItemByName($strItemname){
+			$objQuery = $this->db->prepare("SELECT * FROM __plugin_localitembase WHERE LOWER(item_name) LIKE ".$this->db->escapeString('%'.$this->utf8_strtolower($strItemname).'%'))->execute();
+			if($objQuery){
+				while($row = $objQuery->fetchAssoc()){
+					$arrNames = unserialize($row['item_name']);
+					foreach($arrNames as $key => $val){
+						if($this->utf8_strtolower($val) === $this->utf8_strtolower($strItemname)){
+							return $row;
+						}
+					}
+				}
+			}
+			
+			return false;
 		}
 		
 		private function getItemFromDatabase($intLitItemID){
@@ -182,6 +202,43 @@ if(!class_exists('localitembase')) {
 
 			$item['baditem'] = true;
 			return $item;
+		}
+		
+		
+		private function unsanitize($input){
+			if (is_array($input)){
+				return array_map("unsanitize", $input);
+			}
+		
+			$input = str_replace("&#34;", "&quot;", $input);
+			return htmlspecialchars_decode($input, ENT_QUOTES);
+		}
+		
+		//A workaround because strtolower() does not support UTF8
+		private function utf8_strtolower($string){
+			if (function_exists('mb_strtolower')){
+				$string = mb_strtolower($string,'UTF-8');
+			} else {
+				$convert_to = array(
+						"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u",
+						"v", "w", "x", "y", "z", "à", "á", "â", "ã", "ä", "å", "æ", "ç", "è", "é", "ê", "ë", "ì", "í", "î", "ï",
+						"ð", "ñ", "ò", "ó", "ô", "õ", "ö", "ø", "ù", "ú", "û", "ü", "ý", "а", "б", "в", "г", "д", "е", "ё", "ж",
+						"з", "и", "й", "к", "л", "м", "н", "о", "п", "р", "с", "т", "у", "ф", "х", "ц", "ч", "ш", "щ", "ъ", "ы",
+						"ь", "э", "ю", "я"
+				);
+				$convert_from = array(
+						"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U",
+						"V", "W", "X", "Y", "Z", "À", "Á", "Â", "Ã", "Ä", "Å", "Æ", "Ç", "È", "É", "Ê", "Ë", "Ì", "Í", "Î", "Ï",
+						"Ð", "Ñ", "Ò", "Ó", "Ô", "Õ", "Ö", "Ø", "Ù", "Ú", "Û", "Ü", "Ý", "А", "Б", "В", "Г", "Д", "Е", "Ё", "Ж",
+						"З", "И", "Й", "К", "Л", "М", "Н", "О", "П", "Р", "С", "Т", "У", "Ф", "Х", "Ц", "Ч", "Ш", "Щ", "Ъ", "Ъ",
+						"Ь", "Э", "Ю", "Я"
+				);
+		
+				$string = str_replace($convert_from, $convert_to, $string);
+			}
+		
+		
+			return $string;
 		}
 
 	}
