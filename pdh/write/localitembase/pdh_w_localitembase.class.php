@@ -64,6 +64,12 @@ if ( !class_exists( "pdh_w_localitembase" ) ) {
 			$this->pdh->enqueue_hook('localitembase_update');
 		}
 		
+		public function delete($id){
+			$objQuery = $this->db->prepare("DELETE FROM __plugin_localitembase WHERE id=?")->execute($id);
+			
+			$this->pdh->enqueue_hook('localitembase_update');
+		}
+		
 
 	}//end class
 }//end if

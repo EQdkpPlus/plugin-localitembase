@@ -47,9 +47,17 @@ class itembase_pageobject extends pageobject {
     	'save' => array('process' => 'save', 'csrf' => true),
     	'i' => array('process' => 'edit')
     );
-    parent::__construct(false, $handler, array('localitembase', 'name'), null, 'selected_ids[]');
+    parent::__construct(false, $handler, array('localitembase', 'html_item_name'), null, 'selected_ids[]');
 
     $this->process();
+  }
+  
+  public function delete(){
+  	$arrSelected = $this->in->getArray('selected_ids', 'int');
+  	foreach($arrSelected as $itemID){
+  		$this->pdh->put('localitembase', 'delete', array($itemID));
+  	}
+  	$this->pdh->process_hook_queue();
   }
   
   public function save(){

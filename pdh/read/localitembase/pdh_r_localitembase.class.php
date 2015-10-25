@@ -324,7 +324,6 @@ if ( !class_exists( "pdh_r_localitembase" ) ) {
 				
 			return false;
 		}
-		
 
 	}//end class
 }//end if

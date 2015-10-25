@@ -130,10 +130,14 @@ if(!class_exists('localitembase')) {
 				return $item;
 			}
 			
+			//lit: means, that following id is the internal primary key
 			if(strpos($item_id, 'lit:') === 0){
 				$intLitItemID = (int)substr($item_id, 4);
 				$arrItemData = $this->getItemFromDatabase($intLitItemID);
 			} else {
+				//User can prefix the ItemID with lib: just to use localitembase.
+				if(strpos($item_id, 'lib:') === 0) $item_id = (int)substr($item_id, 4);
+				
 				$arrItemData = $this->getItemFromIngameID($item_id);
 				$intLitItemID = $arrItemData['id'];
 			}
