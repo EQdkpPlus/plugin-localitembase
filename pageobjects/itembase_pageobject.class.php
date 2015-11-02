@@ -231,9 +231,15 @@ class itembase_pageobject extends pageobject {
 	$strIconPath	= $this->pfh->FolderPath('icons', 'localitembase');
 	$strImagePath	= $this->pfh->FolderPath('images', 'localitembase');
 	
-	// ----------------------------------------------------------------
-	// Here we need to fetch the ZIP File and move it to the cache folder of Plugin with new name of $strZipName
-	// ----------------------------------------------------------------
+	$strFileTemp	= $_FILES['file']['tmp_name'];
+	$strFileType	= $_FILES['file']['type'];
+	
+	if($strFileType != 'application/zip'){ header("HTTP/1.1 500 Internal Error");exit; }
+	
+	$this->pfh->Delete($strCachePath.$strZipName);
+	$this->pfh->FileMove($strFileTemp, $strCachePath.$strZipName, true);
+	
+	if(!file_exists($strCachePath.$strZipName)){ header("HTTP/1.1 500 Internal Error");exit; }
 	
 	$objZIP	= registry::register('zip', array($strCachePath.$strZipName));
 	$objZIP->extract($strCachePath.'import/');
@@ -263,7 +269,6 @@ class itembase_pageobject extends pageobject {
 	
 	$this->pdh->process_hook_queue();
 	$this->pfh->Delete($strCachePath.'import/');
-	$this->pfh->Delete($strCachePath.$strZipName);
 	
 	exit;
   }
