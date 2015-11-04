@@ -256,7 +256,7 @@ class itembase_pageobject extends pageobject {
 	foreach($arrJSON as $arrItemDump){
 		if(!in_array($arrItemDump['item_gameid'], $arrItemIDs)){
 			
-			$this->pdh->put('localitembase', 'insert', array($arrItemDump['item_gameid'], $arrItemDump['icon'], $arrItemDump['quality'], $arrItemDump['item_name'], $arrItemDump['text'], $arrItemDump['image'], $arrItemDump['languages']));
+			$this->pdh->put('localitembase', 'insert', array($arrItemDump['item_gameid'], $arrItemDump['icon'], $arrItemDump['quality'], unserialize($arrItemDump['item_name']), unserialize($arrItemDump['text']), unserialize($arrItemDump['image']), $arrItemDump['languages']));
 				
 			if(!empty($arrItemDump['icon'])) $this->pfh->FileMove($strCachePath.'import/icons/'.$arrItemDump['icon'], $strIconPath.$arrItemDump['icon']);
 			
