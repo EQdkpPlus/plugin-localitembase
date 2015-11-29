@@ -41,6 +41,7 @@ $lang = array(
 	'lit_fs_export_import' => 'Import & Export',
 	'lit_f_export' => 'Items exportieren',
 	'lit_f_import' => 'Items importieren',
+	'lit_f_import_success' => 'Items erfolgreich importiert',
 	'lit_f_importfield' => 'Ein-/Ausgabe',
 	'lit_add_item' => 'Neues Item anlegen',
 	'lit_delete_selected_items' => 'Ausgewählte Items löschen',

@@ -44,8 +44,10 @@ class itembase_pageobject extends pageobject {
     if(!$this->user->is_signedin()) $this->user->check_auth('u_something');
     
     $handler = array(
-    	'save' => array('process' => 'save', 'csrf' => true),
-    	'i' => array('process' => 'edit')
+    	'save'		=> array('process' => 'save', 'csrf' => true),
+    	'i'			=> array('process' => 'edit'),
+		'import'	=> array('process' => 'import', 'csrf' => true),
+		'export'	=> array('process' => 'export'),
     );
     parent::__construct(false, $handler, array('localitembase', 'html_item_name'), null, 'selected_ids[]');
 
@@ -221,6 +223,91 @@ class itembase_pageobject extends pageobject {
   			'template_file'		=> 'itembase_edit.html',
   			'display'			=> true)
   	);
+  }
+  
+  public function import(){
+	$strZipName		= 'localitembase_dump.zip';
+	$strCachePath	= $this->pfh->FolderPath('cache', 'localitembase');
+	$strIconPath	= $this->pfh->FolderPath('icons', 'localitembase');
+	$strImagePath	= $this->pfh->FolderPath('images', 'localitembase');
+	
+	$strFileTemp	= $_FILES['file']['tmp_name'];
+	$strFileType	= $_FILES['file']['type'];
+	
+	if($strFileType != 'application/zip'){ header("HTTP/1.1 500 Internal Error");exit; }
+	
+	$this->pfh->Delete($strCachePath.$strZipName);
+	$this->pfh->FileMove($strFileTemp, $strCachePath.$strZipName, true);
+	
+	if(!file_exists($strCachePath.$strZipName)){ header("HTTP/1.1 500 Internal Error");exit; }
+	
+	$objZIP	= registry::register('zip', array($strCachePath.$strZipName));
+	$objZIP->extract($strCachePath.'import/');
+	$objZIP->close();
+	
+	$arrItemIDs	= array();
+	$arrJSON	= file_get_contents($strCachePath.'import/localitembase_dump.json');
+	$arrJSON	= json_decode($arrJSON, true);
+	
+	foreach($this->pdh->get('localitembase', 'id_list', array()) as $itemID){
+  		$arrItemIDs[$itemID] = $this->pdh->get('localitembase', 'item_gameid', array($itemID));
+  	}
+
+	foreach($arrJSON as $arrItemDump){
+		if(!in_array($arrItemDump['item_gameid'], $arrItemIDs)){
+			
+			$this->pdh->put('localitembase', 'insert', array($arrItemDump['item_gameid'], $arrItemDump['icon'], $arrItemDump['quality'], unserialize($arrItemDump['item_name']), unserialize($arrItemDump['text']), unserialize($arrItemDump['image']), $arrItemDump['languages']));
+				
+			if(!empty($arrItemDump['icon'])) $this->pfh->FileMove($strCachePath.'import/icons/'.$arrItemDump['icon'], $strIconPath.$arrItemDump['icon']);
+			
+			$arrImages = unserialize($arrItemDump['image']);
+			foreach($arrImages as $strImage){
+				$this->pfh->FileMove($strCachePath.'import/images/'.$strImage, $strImagePath.$strImage);
+			}
+		}
+	}
+	
+	$this->pdh->process_hook_queue();
+	$this->pfh->Delete($strCachePath.'import/');
+	
+	exit;
+  }
+  
+  public function export(){
+	$arrItems		= array();
+	$strZipName		= 'localitembase_dump.zip';
+	$strCachePath	= $this->pfh->FolderPath('cache', 'localitembase');
+	$strIconPath	= $this->pfh->FolderPath('icons', 'localitembase');
+	$strImagePath	= $this->pfh->FolderPath('images', 'localitembase');
+	
+	foreach($this->pdh->get('localitembase', 'id_list', array()) as $itemID){
+  		$arrItems[] = $this->pdh->get('localitembase', 'data', array($itemID));
+  	}
+	
+	$this->pfh->putContent($strCachePath.'localitembase_dump.json', json_encode($arrItems));
+	$this->pfh->Delete($strCachePath.$strZipName);
+	
+	$objZIP	= registry::register('zip', array($strCachePath.$strZipName));
+	
+	$objZIP->add($strCachePath.'localitembase_dump.json', $strCachePath);
+	$objZIP->add($strIconPath, $strIconPath, 'icons/');
+	$objZIP->add($strImagePath, $strImagePath, 'images/');
+	$objZIP->delete('icons/index.html');
+	$objZIP->delete('images/index.html');
+	
+	$objZIP->create();
+	
+	$this->pfh->Delete($strCachePath.'localitembase_dump.json');
+	
+	if(file_exists($strCachePath.$strZipName)){
+		header('Content-Type: application/octet-stream');
+		header('Content-Length: '.$this->pfh->FileSize($strCachePath.$strZipName));
+		header('Content-Disposition: attachment; filename="'.$strZipName.'"');
+		header('Content-Transfer-Encoding: binary');
+		
+		readfile($strCachePath.$strZipName);
+		exit;
+	}
   }
   
   public function display(){
