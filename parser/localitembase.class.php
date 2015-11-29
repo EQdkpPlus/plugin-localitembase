@@ -1,6 +1,6 @@
 <?php
 /*	Project:	EQdkp-Plus
- *	Package:	Local Itembase Plugin
+ *	Package:	World of Warcraft game package
  *	Link:		http://eqdkp-plus.eu
  *
  *	Copyright (C) 2006-2015 EQdkp-Plus Developer Team
@@ -23,8 +23,6 @@ if(!class_exists('localitembase')) {
 	class localitembase extends itt_parser {
 
 		public static $shortcuts = array('puf' => 'urlfetcher');
-		
-		public static $plugin_version = '1.0.3';
 
 		public $av_langs = array('en' => 'en_US', 'de' => 'de_DE', 'fr' => 'fr_FR', 'ru' => 'ru_RU', 'es' => 'es_ES');
 
@@ -126,7 +124,6 @@ if(!class_exists('localitembase')) {
 
 		protected function getItemData($item_id, $lang, $itemname='', $type='items'){
 			$orig_id = $item_id;
-			$intLitItemID = false;
 			
 			if(!$item_id) {
 				$item['baditem'] = true;
@@ -142,11 +139,10 @@ if(!class_exists('localitembase')) {
 				if(strpos($item_id, 'lib:') === 0) $item_id = (int)substr($item_id, 4);
 				
 				$arrItemData = $this->getItemFromIngameID($item_id);
-				if($arrItemData) $intLitItemID = $arrItemData['id'];
+				$intLitItemID = $arrItemData['id'];
 			}
-
+			
 			if($intLitItemID !== false && count($arrItemData)){
-				
 				$myLang = isset($this->av_langs[$lang]) ? $this->av_langs[$lang] : false;
 				
 				$myLang = ($myLang == 'en_US') ? "en_EN" : $myLang;
