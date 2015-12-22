@@ -44,8 +44,10 @@ class itembase_pageobject extends pageobject {
     if(!$this->user->is_signedin()) $this->user->check_auth('u_something');
     
     $handler = array(
-    	'save' => array('process' => 'save', 'csrf' => true),
-    	'i' => array('process' => 'edit')
+    	'save'		=> array('process' => 'save', 'csrf' => true),
+    	'i'			=> array('process' => 'edit'),
+		'import'	=> array('process' => 'import', 'csrf' => true),
+		'export'	=> array('process' => 'export'),
     );
     parent::__construct(false, $handler, array('localitembase', 'html_item_name'), null, 'selected_ids[]');
 
@@ -223,7 +225,127 @@ class itembase_pageobject extends pageobject {
   	);
   }
   
+  public function import(){
+  	$this->user->check_auth('u_localitembase_import');
+  	
+	$strCachePath	= $this->pfh->FolderPath('cache', 'localitembase');
+	$strIconPath	= $this->pfh->FolderPath('icons', 'localitembase');
+	$strImagePath	= $this->pfh->FolderPath('images', 'localitembase');
+	
+	$uploader = register('uploader');
+	$strZipName = $uploader->upload_mime('file', '', array('application/zip'), array('zip'), 'localitembase_dump', $strCachePath);
+	
+	if(!$strZipName || !file_exists($strCachePath.$strZipName)){ 
+		header("HTTP/1.1 500 Internal Error");
+		exit; 
+	}
+	
+	$objZIP	= registry::register('zip', array($strCachePath.$strZipName));
+	$objZIP->extract($strCachePath.'import/');
+	$objZIP->close();
+	
+	$arrItemIDs	= array();
+	$arrJSON	= file_get_contents($strCachePath.'import/localitembase_dump.json');
+	$arrJSON	= json_decode($arrJSON, true);
+	
+	foreach($this->pdh->get('localitembase', 'id_list', array()) as $itemID){
+  		$arrItemIDs[$itemID] = $this->pdh->get('localitembase', 'item_gameid', array($itemID));
+  	}
+  	
+  	include_once($this->root_path."libraries/inputfilter/input.class.php");
+  	$filter = new FilterInput(get_tag_blacklist(), get_attr_blacklist(), 1,1);
+
+	foreach($arrJSON as $arrItemDump){
+		if(!in_array($arrItemDump['item_gameid'], $arrItemIDs)){
+			$oldText = unserialize($arrItemDump['text']);
+			foreach($oldText as $key => $val){
+				$oldText[$key] = $filter->clean($val);
+			}
+			
+			$arrLanguages = unserialize($arrItemDump['languages']);
+			$arrNewLanguage = sanitize($arrLanguages);
+			
+			$this->pdh->put('localitembase', 'insert', array(
+					sanitize($arrItemDump['item_gameid']),
+					sanitize($arrItemDump['icon']), 
+					sanitize($arrItemDump['quality']), 
+					sanitize(unserialize($arrItemDump['item_name'])), 
+					$oldText, 
+					sanitize(unserialize($arrItemDump['image'])), 
+					serialize($arrNewLanguage)));
+				
+			if(!empty($arrItemDump['icon'])) {
+				$strIcon = preg_replace("/[^a-zA-Z0-9_.-]/iU", "", $arrItemDump['icon']);
+				$strExtension = strtolower(pathinfo($strIcon, PATHINFO_EXTENSION));
+				if(in_array($strExtension, array('jpg', 'png'))){
+					$this->pfh->FileMove($strCachePath.'import/icons/'.$strIcon, $strIconPath.$strIcon);
+				}
+			}
+			
+			$arrImages = unserialize($arrItemDump['image']);
+			foreach($arrImages as $strImage){
+				$strImage = preg_replace("/[^a-zA-Z0-9_.-]/iU", "", $strImage);
+				$strExtension = strtolower(pathinfo($strImage, PATHINFO_EXTENSION));
+				if(in_array($strExtension, array('jpg', 'png'))){
+					$this->pfh->FileMove($strCachePath.'import/images/'.$strImage, $strImagePath.$strImage);
+				}
+			}
+		}
+	}
+	
+	$this->pdh->process_hook_queue();
+	$this->pfh->Delete($strCachePath.'import/');
+	
+	exit;
+  }
+  
+  public function export(){
+  	$this->user->check_auth('u_localitembase_import');
+  	
+	$arrItems		= array();
+	$strZipName		= 'localitembase_dump_'.date('Y_m_d').'.zip';
+	$strCachePath	= $this->pfh->FolderPath('cache', 'localitembase');
+	$strIconPath	= $this->pfh->FolderPath('icons', 'localitembase');
+	$strImagePath	= $this->pfh->FolderPath('images', 'localitembase');
+	
+	foreach($this->pdh->get('localitembase', 'id_list', array()) as $itemID){
+  		$arrItems[] = $this->pdh->get('localitembase', 'data', array($itemID));
+  	}
+	
+	$this->pfh->putContent($strCachePath.'localitembase_dump.json', json_encode($arrItems));
+	$this->pfh->Delete($strCachePath.$strZipName);
+	
+	$objZIP	= registry::register('zip', array($strCachePath.$strZipName));
+	
+	$objZIP->add($strCachePath.'localitembase_dump.json', $strCachePath);
+	$objZIP->add($strIconPath, $strIconPath, 'icons/');
+	$objZIP->add($strImagePath, $strImagePath, 'images/');
+	$objZIP->delete('icons/index.html');
+	$objZIP->delete('images/index.html');
+	
+	$objZIP->create();
+	
+	$this->pfh->Delete($strCachePath.'localitembase_dump.json');
+	
+	if(file_exists($strCachePath.$strZipName)){
+		header('Content-Type: application/octet-stream');
+		header('Content-Length: '.$this->pfh->FileSize($strCachePath.$strZipName));
+		header('Content-Disposition: attachment; filename="'.$strZipName.'"');
+		header('Content-Transfer-Encoding: binary');
+		
+		readfile($strCachePath.$strZipName);
+		
+		$this->pfh->Delete($strCachePath.$strZipName);
+		exit;
+	}
+  }
+  
   public function display(){
+  	//Success Message For Import
+  	if($this->in->exists('success')){
+  		$this->core->message($this->user->lang('lit_f_import_success'), $this->user->lang('success'), 'success', false);
+  	}
+  	
   	$view_list = $this->pdh->get('localitembase', 'id_list', array());
   	
   	$hptt_page_settings = array(
@@ -263,7 +385,8 @@ class itembase_pageobject extends pageobject {
   			'HPTT_COLUMN_COUNT'	=> $hptt->get_column_count(),
   			'PAGINATION'		=> generate_pagination($this->strPath.$this->SID.$sort_suffix, $item_count, $intLimit, $start),
   			'NEW_ITEM_LINK'		=> $this->routing->build('itembase', 'New-Item', 'i0'),
-		));
+  			'S_HAS_IMPORT_PERM' => $this->user->check_auth('u_localitembase_import', false),
+	));
   	
   	$this->core->set_vars(array(
   			'page_title'		=> $this->user->lang('localitembase'),

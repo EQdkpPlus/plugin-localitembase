@@ -41,7 +41,7 @@ class localitembase extends plugin_generic
     return array_merge(parent::$shortcuts, $shortcuts);
   }
 
-  public $version    = '1.0.3';
+  public $version    = '1.1.0';
   public $build      = '';
   public $copyright  = 'GodMod';
   public $vstatus    = 'Alpha';
@@ -80,7 +80,8 @@ class localitembase extends plugin_generic
     // permissions: 'a'=admins, 'u'=user
     // ('a'/'u', Permission-Name, Enable? 'Y'/'N', Language string, array of user-group-ids that should have this permission)
     // Groups: 1 = Guests, 2 = Super-Admin, 3 = Admin, 4 = Member
-	$this->add_permission('u', 'view',    'Y', $this->user->lang('view'),    array(2,3,4));	
+	$this->add_permission('u', 'view',    'Y', $this->user->lang('view'),    array(2,3,4));
+	$this->add_permission('u', 'import',   'Y', $this->user->lang('lit_fs_export_import'),  array(2,3));
 	$this->add_permission('a', 'settings', 'N', $this->user->lang('menu_settings'), array(2,3));	
 
     // -- PDH Modules -------------------------------------

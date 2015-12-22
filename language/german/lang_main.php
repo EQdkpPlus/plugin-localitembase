@@ -41,6 +41,7 @@ $lang = array(
 	'lit_fs_export_import' => 'Import & Export',
 	'lit_f_export' => 'Items exportieren',
 	'lit_f_import' => 'Items importieren',
+	'lit_f_import_success' => 'Items erfolgreich importiert',
 	'lit_f_importfield' => 'Ein-/Ausgabe',
 	'lit_add_item' => 'Neues Item anlegen',
 	'lit_delete_selected_items' => 'Ausgewählte Items löschen',
@@ -59,6 +60,7 @@ $lang = array(
 	'lit_f_item_images_help' => 'Itembild, z.B. ein Screenshot direkt aus dem Bild. Kann statt oder mit der Item-Beschreibung verwendet werden.',
 	'lit_f_icon' => 'Item-Icon',
 	'lit_f_help_icon' => 'Icon des Items. Normalerweise zwischen 16px und 32px breit.',
+	'lit_download' => 'Herunterladen',
  );
 
 ?>

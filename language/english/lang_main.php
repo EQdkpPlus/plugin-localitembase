@@ -38,7 +38,10 @@ $lang = array(
 	'lit_f_base_layout' => 'HTML-Baselayout of the Itemtooltip',
 	'lit_f_base_css' => 'CSS for Styling of the Itemtooltip',
 	'lit_f_infotext' => 'Informationtext for User',
-
+	'lit_fs_export_import' => 'Import & Export',
+	'lit_f_export' => 'Export Items',
+	'lit_f_import' => 'Import Items',
+	'lit_f_import_success' => 'Successfully imported Items',
 	'lit_add_item' => 'Add new Item',
 	'lit_delete_selected_items' => 'Delete selected items',
 	'lit_delete_confirm' => 'Are you sure you want to delete the following items: %s',
@@ -56,6 +59,7 @@ $lang = array(
 	'lit_f_item_images_help' => 'Image, like a Screenshot, of the Item. Can be used instead, or with the Item-Description.',
 	'lit_f_icon' => 'Item-Icon',
 	'lit_f_help_icon' => 'Icon of the Item, normally 16px or 32px width',
+	'lit_download' => 'Download',
  );
 
 ?>
