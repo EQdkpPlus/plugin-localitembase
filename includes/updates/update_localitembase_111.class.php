@@ -25,12 +25,12 @@ if (!defined('EQDKP_INC')){
 
 include_once(registry::get_const('root_path').'maintenance/includes/sql_update_task.class.php');
 
-if (!class_exists('update_localitembase_110')){
-	class update_localitembase_110 extends sql_update_task{
+if (!class_exists('update_localitembase_111')){
+	class update_localitembase_111 extends sql_update_task{
 
 		public $author		= 'GodMod';
-		public $version		= '1.1.0';    // new version
-		public $name		= 'Localitembase 1.1.0 Update';
+		public $version		= '1.1.1';    // new version
+		public $name		= 'Localitembase 1.1.1 Update';
 		public $type		= 'plugin_update';
 		public $plugin_path	= 'localitembase'; // important!
 
@@ -43,22 +43,19 @@ if (!class_exists('update_localitembase_110')){
 			// init language
 			$this->langs = array(
 				'english' => array(
-					'update_localitembase_110'	=> 'Localitembase 1.1.0 Update Package',
-					'update_function' 			=> 'Add Permission',
+					'update_localitembase_111'	=> 'Localitembase 1.1.1 Update Package',
+					'update_function' 			=> 'Update Parser',
 				),
 				'german' => array(
-					'update_localitembase_110'	=> 'Localitembase 1.1.0 Update Paket',
-					'update_function'			=> 'Füge Berechtigung hinzu',
+					'update_localitembase_111'	=> 'Localitembase 1.1.1 Update Paket',
+					'update_function'			=> 'Aktualisiere Parser',
 				),
 			);
 
 		}
 		
 		public function update_function(){
-			$this->db->prepare("INSERT INTO __auth_options :p")->set(array(
-				'auth_value'	=> 'u_localitembase_import',
-				'auth_default'	=> 'Y',
-			))->execute();
+			$this->pfh->copy($this->root_path.'plugins/localitembase/parser/localitembase.class.php', $this->root_path.'games/'.$this->config->get('default_game').'/infotooltip/localitembase.class.php');
 
 			return true;
 		}

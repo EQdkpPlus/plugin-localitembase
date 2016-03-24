@@ -3,7 +3,7 @@
  *	Package:	Local Itembase Plugin
  *	Link:		http://eqdkp-plus.eu
  *
- *	Copyright (C) 2006-2015 EQdkp-Plus Developer Team
+ *	Copyright (C) 2006-2016 EQdkp-Plus Developer Team
  *
  *	This program is free software: you can redistribute it and/or modify
  *	it under the terms of the GNU Affero General Public License as published
@@ -41,7 +41,7 @@ class localitembase extends plugin_generic
     return array_merge(parent::$shortcuts, $shortcuts);
   }
 
-  public $version    = '1.1.0';
+  public $version    = '1.1.1';
   public $build      = '';
   public $copyright  = 'GodMod';
   public $vstatus    = 'Alpha';

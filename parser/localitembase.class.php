@@ -3,7 +3,7 @@
  *	Package:	Local Itembase Plugin
  *	Link:		http://eqdkp-plus.eu
  *
- *	Copyright (C) 2006-2015 EQdkp-Plus Developer Team
+ *	Copyright (C) 2006-2016 EQdkp-Plus Developer Team
  *
  *	This program is free software: you can redistribute it and/or modify
  *	it under the terms of the GNU Affero General Public License as published
@@ -24,7 +24,7 @@ if(!class_exists('localitembase')) {
 
 		public static $shortcuts = array('puf' => 'urlfetcher');
 		
-		public static $plugin_version = '1.0.3';
+		public static $plugin_version = '1.1.1';
 
 		public $av_langs = array('en' => 'en_US', 'de' => 'de_DE', 'fr' => 'fr_FR', 'ru' => 'ru_RU', 'es' => 'es_ES');
 
@@ -72,6 +72,9 @@ if(!class_exists('localitembase')) {
 		}
 		
 		private function getItemByName($strItemname){
+			//Sanitize, because it is in database sanitized
+			$strItemname = filter_var($strItemname, FILTER_SANITIZE_STRING);
+			
 			$objQuery = $this->db->prepare("SELECT * FROM __plugin_localitembase WHERE LOWER(item_name) LIKE ".$this->db->escapeString('%'.$this->utf8_strtolower($strItemname).'%'))->execute();
 			if($objQuery){
 				while($row = $objQuery->fetchAssoc()){
