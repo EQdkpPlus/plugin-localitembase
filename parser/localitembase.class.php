@@ -24,7 +24,7 @@ if(!class_exists('localitembase')) {
 
 		public static $shortcuts = array('puf' => 'urlfetcher');
 		
-		public static $plugin_version = '1.1.1';
+		public static $plugin_version = '1.1.2';
 
 		public $av_langs = array('en' => 'en_US', 'de' => 'de_DE', 'fr' => 'fr_FR', 'ru' => 'ru_RU', 'es' => 'es_ES');
 
@@ -75,7 +75,7 @@ if(!class_exists('localitembase')) {
 			//Sanitize, because it is in database sanitized
 			$strItemname = filter_var($strItemname, FILTER_SANITIZE_STRING);
 			
-			$objQuery = $this->db->prepare("SELECT * FROM __plugin_localitembase WHERE LOWER(item_name) LIKE ".$this->db->escapeString('%'.$this->utf8_strtolower($strItemname).'%'))->execute();
+			$objQuery = $this->db->query("SELECT * FROM __plugin_localitembase WHERE LOWER(item_name) LIKE ".$this->db->escapeString('%'.$this->utf8_strtolower($strItemname).'%'));
 			if($objQuery){
 				while($row = $objQuery->fetchAssoc()){
 					$arrNames = unserialize($row['item_name']);
