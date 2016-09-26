@@ -369,10 +369,10 @@ class itembase_pageobject extends pageobject {
   					array('name' => 'localitembase_update_by','sort' => true, 'th_add' => '', 'td_add' => ''),	
   			),
   	);
-  	$hptt = $this->get_hptt($hptt_page_settings, $view_list, $view_list, array('%link_url%' => $this->root_path.'plugins/mediacenter/admin/manage_media.php', '%link_url_suffix%' => ''));
+  	$hptt = $this->get_hptt($hptt_page_settings, $view_list, $view_list, array('%link_url%' => $this->routing->simpleBuild('Itembase'), '%link_url_suffix%' => ''));
   	$page_suffix = '&amp;start='.$this->in->get('start', 0);
   	$sort_suffix = '?sort='.$this->in->get('sort');
-  	
+  	$hptt->setPageRef($this->strPath);
   	$intLimit = 25;
   	$start	  = $this->in->get('start', 0);
   	
