@@ -295,7 +295,7 @@ if ( !class_exists( "pdh_r_localitembase" ) ) {
 		}
 		
 		public function get_html_update_date($intItemID){
-			return ($this->get_update_by()) ? $this->time->user_date($this->get_added_date($intItemID)) : "";
+			return ($this->get_update_by($intItemID)) ? $this->time->user_date($this->get_added_date($intItemID)) : "";
 		}
 		
 		public function get_html_added_by($intItemID){
