@@ -1,0 +1,39 @@
+<div class="breadcrumb-container">
+	<ul class="breamcrumb">
+		<li><a href="{EQDKP_CONTROLLER_PATH}{SID}" title="{L_home}"><i class="fa fa-home"></i></a></li>
+		<li><a href="{EQDKP_ROOT_PATH}admin/{SID}">{L_menu_admin_panel}</a>
+		<li class="current"><a href="">{L_localitembase}</a></li>
+	</ul>
+	<div class="clear"></div>
+</div>
+
+<form method="post" action="{ACTION}" name="post">
+	<div class="contentHeader">
+		<h1 class="contentTitle">{L_localitembase}</h1>
+	</div>
+	<div class="tableHeader floatRight">
+		<button class="mainoption" type="button" name="addadj" onclick="window.location='{EQDKP_CONTROLLER_PATH}ItemBaseEdit{SEO_EXTENSION}{SID}'"><i class="fa fa-cog"></i>{L_lit_edit_itembase}</button>
+	</div>
+	<div class="clear"></div>
+	
+
+	<fieldset class="settings">
+		<dl>
+			<dt><label>{L_lit_search_database}</label><br /><span>{L_search_value_note}</span></dt>
+			<dd><input type="text" class="input" size="30" name="litsvalue" value="{LIT_SEARCH_VALUE}" /></dd>
+		</dl>
+	</fieldset>
+	<button type="submit" name="search" class="mainoption"><i class="fa fa-search"></i>{L_search_do}</button>
+	{CSRF_TOKEN}	
+</form>
+	
+	<!-- IF S_LIT_SEARCHRESULTS -->
+	<br />
+	<table width="100%" border="0" cellspacing="1" cellpadding="2" class="table colorswitch" id="article_categories-table">
+		{ITEM_LIST}
+	</table>
+	<div class="center pagination_wrapper">
+		{PAGINATION}
+	</div>
+	
+	<!-- ENDIF -->

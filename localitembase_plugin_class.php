@@ -41,7 +41,7 @@ class localitembase extends plugin_generic
     return array_merge(parent::$shortcuts, $shortcuts);
   }
 
-  public $version    = '1.1.4';
+  public $version    = '1.2.0';
   public $build      = '';
   public $copyright  = 'GodMod';
   public $vstatus    = 'Alpha';
@@ -81,6 +81,8 @@ class localitembase extends plugin_generic
     // ('a'/'u', Permission-Name, Enable? 'Y'/'N', Language string, array of user-group-ids that should have this permission)
     // Groups: 1 = Guests, 2 = Super-Admin, 3 = Admin, 4 = Member
 	$this->add_permission('u', 'view',    'Y', $this->user->lang('view'),    array(2,3,4));
+	
+	$this->add_permission('u', 'manage',   'N', $this->user->lang('lit_fs_manage'),  array(2,3));
 	$this->add_permission('u', 'import',   'N', $this->user->lang('lit_fs_export_import'),  array(2,3));
 	$this->add_permission('a', 'settings', 'N', $this->user->lang('menu_settings'), array(2,3));	
 
@@ -91,6 +93,7 @@ class localitembase extends plugin_generic
 	
     //Routing
 	$this->routing->addRoute('ItemBase', 'itembase', 'plugins/localitembase/pageobjects');
+	$this->routing->addRoute('ItemBaseEdit', 'itembaseedit', 'plugins/localitembase/pageobjects');
 
 	// -- Menu --------------------------------------------
     $this->add_menu('admin', $this->gen_admin_menu());
@@ -98,6 +101,9 @@ class localitembase extends plugin_generic
 
 	if($this->config->get('base_css', 'localitembase') && strlen($this->config->get('base_css', 'localitembase'))) $this->tpl->add_css($this->config->get('base_css', 'localitembase'));
 
+	$this->add_hook('portal', 'localitembase_portal_hook', 'portal');
+  
+  
   }
 
   /**
@@ -115,7 +121,7 @@ class localitembase extends plugin_generic
 	  
     $this->pdc->del_prefix('pdh_localitembase_');
     
-    $this->pfh->copy($this->root_path.'plugins/localitembase/parser/localitembase.class.php', $this->root_path.'games/'.$this->config->get('default_game').'/infotooltip/localitembase.class.php');
+    $this->pfh->copy($this->root_path.'plugins/localitembase/parser/localitembase_parser.class.php', $this->root_path.'games/'.$this->config->get('default_game').'/infotooltip/localitembase_parser.class.php');
   }
   
   /**

@@ -20,14 +20,14 @@
 		var formData = new FormData($('#localitembase_import form')[0]);
 		
 		$.ajax({
-			url : "{EQDKP_CONTROLLER_PATH}ItemBase{SEO_EXTENSION}{SID}&import",
+			url : "{EQDKP_CONTROLLER_PATH}ItemBaseEdit{SEO_EXTENSION}{SID}&import",
 			type: "POST",
 			data : formData,
 			processData: false,
 			contentType: false,
 			success:function(data, textStatus, jqXHR){
 				$('#localitembase_import').dialog('destroy');
-				window.location.href='{EQDKP_CONTROLLER_PATH}ItemBase{SEO_EXTENSION}{SID}&success';
+				window.location.href='{EQDKP_CONTROLLER_PATH}ItemBaseEdit{SEO_EXTENSION}{SID}&success';
 			},
 			error: function(jqXHR, textStatus, errorThrown){
 				$('#localitembase_import').dialog('destroy');
@@ -41,14 +41,15 @@
 	<ul class="breamcrumb">
 		<li><a href="{EQDKP_CONTROLLER_PATH}{SID}" title="{L_home}"><i class="fa fa-home"></i></a></li>
 		<li><a href="{EQDKP_ROOT_PATH}admin/{SID}">{L_menu_admin_panel}</a>
-		<li class="current"><a href="">{L_localitembase}</a></li>
+		<li><a href="{EQDKP_CONTROLLER_PATH}ItemBase{SEO_EXTENSION}{SID}">{L_localitembase}</a></li>
+		<li class="current"><a href="">{L_lit_edit_itembase}</a></li>
 	</ul>
 	<div class="clear"></div>
 </div>
 
 <form method="post" action="{ACTION}" name="post">
 	<div class="contentHeader">
-		<h1 class="contentTitle">{L_localitembase}</h1>
+		<h1 class="contentTitle">{L_lit_edit_itembase}</h1>
 	</div>
 	
 	<div class="tableHeader floatRight">
@@ -80,7 +81,7 @@
 			</dl>
 			<dl>
 				<dt><label>{L_lit_f_export}</label>
-				<dd><button class="mainoption" type="button" onclick="window.location='{EQDKP_CONTROLLER_PATH}ItemBase{SEO_EXTENSION}{SID}&export'"><i class="fa fa-floppy-o fa-lg"></i>{L_lit_download}</button></dd>
+				<dd><button class="mainoption" type="button" onclick="window.location='{EQDKP_CONTROLLER_PATH}ItemBaseEdit{SEO_EXTENSION}{SID}&export'"><i class="fa fa-floppy-o fa-lg"></i>{L_lit_download}</button></dd>
 			</dl>
 		</fieldset>
 		{CSRF_TOKEN}

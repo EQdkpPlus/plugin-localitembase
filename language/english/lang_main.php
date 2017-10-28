@@ -60,6 +60,9 @@ $lang = array(
 	'lit_f_icon' => 'Item-Icon',
 	'lit_f_help_icon' => 'Icon of the Item, normally 16px or 32px width',
 	'lit_download' => 'Download',
+	'lit_search_database' => 'Search database',
+	'lit_edit_itembase'	=> 'Manage local itemdatabase',
+	'lit_fs_manage'	=> 'Manage Items',
  );
 
 ?>

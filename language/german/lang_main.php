@@ -61,6 +61,9 @@ $lang = array(
 	'lit_f_icon' => 'Item-Icon',
 	'lit_f_help_icon' => 'Icon des Items. Normalerweise zwischen 16px und 32px breit.',
 	'lit_download' => 'Herunterladen',
+	'lit_search_database' => 'Datenbank durchsuchen',
+	'lit_edit_itembase'	=> 'Lokale Itemdatenbank verwalten',
+	'lit_fs_manage'	=> 'Items verwalten',
  );
 
 ?>

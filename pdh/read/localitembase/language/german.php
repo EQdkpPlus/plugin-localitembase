@@ -31,6 +31,7 @@ $module_lang = array(
 	'added_date'	=> 'Angelegt',
 	'update_date'	=> 'Zuletzt bearbeitet',
 	'update_by'		=> 'Bearbeitet von',
+	'name_itemtooltip' => 'Item',
 );
 
 

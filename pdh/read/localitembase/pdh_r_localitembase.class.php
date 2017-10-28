@@ -53,6 +53,7 @@ if ( !class_exists( "pdh_r_localitembase" ) ) {
 		'localitembase_update_date' => array('update_date', array('%intItemID%'), array()),
 		'localitembase_update_by' => array('update_by', array('%intItemID%'), array()),
 		'localitembase_editicon' => array('editicon', array('%intItemID%'), array()),
+		'localitembase_name_itt' => array('name_itemtooltip', array('%intItemID%'), array()),
 	);
 				
 	public function reset(){
@@ -273,7 +274,7 @@ if ( !class_exists( "pdh_r_localitembase" ) ) {
 		}
 		
 		public function get_editicon($intItemID){
-			$out = '<a href="'.$this->routing->build('itembase', $this->get_single_item_name($intItemID), 'i'.$intItemID).'">
+			$out = '<a href="'.$this->routing->build('itembaseedit', $this->get_single_item_name($intItemID), 'i'.$intItemID).'">
 				<i class="fa fa-pencil fa-lg" title="'.$this->user->lang('edit').'"></i>
 			</a>';
 		
@@ -290,6 +291,18 @@ if ( !class_exists( "pdh_r_localitembase" ) ) {
 			return $strOut;
 		}
 		
+		public function get_name_itemtooltip($intItemID){
+			$strOut = infotooltip($this->get_html_item_name($intItemID), 'lit:'.$intItemID);
+			return $strOut;
+		}
+		
+		public function comp_name_itemtooltip($a, $b){
+			$members1 = $this->get_item_name($a);
+			$members2 = $this->get_item_name($b);
+			
+			return ($members1 < $members2) ? -1  : 1 ;
+		}
+		
 		public function get_html_added_date($intItemID){
 			return $this->time->user_date($this->get_added_date($intItemID));
 		}
@@ -303,7 +316,7 @@ if ( !class_exists( "pdh_r_localitembase" ) ) {
 		}
 		
 		public function get_html_update_by($intItemID){
-			return  ($this->get_update_by()) ? $this->pdh->get('user', 'name', array($this->get_update_by($intItemID))) : "";
+			return  ($this->get_update_by($intItemID)) ? $this->pdh->get('user', 'name', array($this->get_update_by($intItemID))) : "";
 		}
 		
 		public function get_single_item_name($intItemID){
