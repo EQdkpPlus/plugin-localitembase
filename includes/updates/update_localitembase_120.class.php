@@ -56,11 +56,13 @@ if (!class_exists('update_localitembase_120')){
 		
 		public function update_function(){
 			$this->pfh->copy($this->root_path.'plugins/localitembase/parser/localitembase_parser.class.php', $this->root_path.'games/'.$this->config->get('default_game').'/infotooltip/localitembase_parser.class.php');
-
+			$this->pfh->Delete($this->root_path.'games/'.$this->config->get('default_game').'/infotooltip/localitembase.class.php');
+			
 			$this->db->prepare("INSERT INTO __auth_options :p")->set(array(
 					'auth_value'	=> 'u_localitembase_manage',
 					'auth_default'	=> 'N',
 			))->execute();
+			
 			return true;
 		}
 	}
