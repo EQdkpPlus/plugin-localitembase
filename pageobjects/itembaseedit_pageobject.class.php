@@ -368,7 +368,7 @@ class itembaseedit_pageobject extends pageobject {
   					array('name' => 'localitembase_update_by','sort' => true, 'th_add' => '', 'td_add' => ''),	
   			),
   	);
-  	$hptt = $this->get_hptt($hptt_page_settings, $view_list, $view_list, array('%link_url%' => $this->routing->simpleBuild('Itembase'), '%link_url_suffix%' => ''));
+  	$hptt = $this->get_hptt($hptt_page_settings, $view_list, $view_list, array('%link_url%' => $this->routing->simpleBuild('Itembaseedit'), '%link_url_suffix%' => ''));
   	$page_suffix = '&amp;start='.$this->in->get('start', 0);
   	$sort_suffix = '?sort='.$this->in->get('sort');
   	$hptt->setPageRef($this->strPath);
@@ -383,7 +383,7 @@ class itembaseedit_pageobject extends pageobject {
   			'ITEM_LIST'			=> $hptt->get_html_table($this->in->get('sort'), $page_suffix, $start, $intLimit),
   			'HPTT_COLUMN_COUNT'	=> $hptt->get_column_count(),
   			'PAGINATION'		=> generate_pagination($this->strPath.$this->SID.$sort_suffix, $item_count, $intLimit, $start),
-  			'NEW_ITEM_LINK'		=> $this->routing->build('itembase', 'New-Item', 'i0'),
+  			'NEW_ITEM_LINK'		=> $this->routing->build('itembaseedit', 'New-Item', 'i0'),
   			'S_HAS_IMPORT_PERM' => $this->user->check_auth('u_localitembase_import', false),
 	));
   	
