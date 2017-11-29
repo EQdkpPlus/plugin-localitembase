@@ -220,6 +220,10 @@ class itembaseedit_pageobject extends pageobject {
   			'page_title'		=> (($itemID > 0) ? $this->pdh->get('localitembase', 'single_item_name', array($itemID)) : $this->user->lang('lit_add_item')) .' - '.$this->user->lang('localitembase'),
   			'template_path'		=> $this->pm->get_data('localitembase', 'template_path'),
   			'template_file'		=> 'itembase_edit.html',
+  			'page_path'			=> [
+  					['title'=>$this->user->lang('localitembase'), 'url'=> $this->routing->build('Itembase')],
+  					['title'=>($itemID > 0) ? $this->pdh->get('localitembase', 'single_item_name', array($itemID)) : $this->user->lang('lit_add_item'), 'url'=> ' '],
+  			],
   			'display'			=> true)
   	);
   }
@@ -391,6 +395,10 @@ class itembaseedit_pageobject extends pageobject {
   			'page_title'		=> $this->user->lang('lit_edit_itembase'),
   			'template_path'		=> $this->pm->get_data('localitembase', 'template_path'),
   			'template_file'		=> 'itembase.html',
+  			'page_path'			=> [
+  					['title'=>$this->user->lang('localitembase'), 'url'=> $this->routing->build('Itembase')],
+  					['title'=>$this->user->lang('lit_edit_itembase'), 'url'=> ' '],
+  			],
   			'display'			=> true)
   	);
 

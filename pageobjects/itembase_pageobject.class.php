@@ -132,6 +132,9 @@ class itembase_pageobject extends pageobject {
   	$this->core->set_vars(array(
   			'page_title'		=> $this->user->lang('localitembase'),
   			'template_path'		=> $this->pm->get_data('localitembase', 'template_path'),
+  			'page_path'			=> [
+  					['title'=>$this->user->lang('localitembase'), 'url'=>' '],
+  			],
   			'template_file'		=> 'search.html',
   			'display'			=> true)
   	);
