@@ -60,10 +60,11 @@ class itembase_pageobject extends pageobject {
   	}
   	
   	$strSearchValue = $this->in->get('litsvalue', '');
+  	$maybeHit = array();
+  	
   	if(strlen($strSearchValue)){
   		$strItemname = filter_var($strSearchValue, FILTER_SANITIZE_STRING);
-  		$maybeHit = array();
-  		
+
   		$objQuery = $this->db->prepare("SELECT * FROM __plugin_localitembase WHERE item_gameid=?")->execute($strItemname);
   		if($objQuery){
   			while($row = $objQuery->fetchAssoc()){
